@@ -42,3 +42,47 @@ tab:CreateInput({
         end
     end,
 })
+
+tab:CreateInput({
+    name = "Max players",
+    numeric = true,
+    value = "16",
+    placeholder = "Enter a number",
+    callback = function(text)
+        local function getPath(path)
+    local current = game
+
+    for part in path:gmatch("[^%.]+") do
+        if part == "Workspace" then
+            current = workspace
+        else
+            current = current and current:FindFirstChild(part)
+        end
+
+        if not current then
+            return nil
+        end
+    end
+
+    return current
+end
+
+local Input = Tab:CreateInput({
+    Name = "Folder Path",
+    CurrentValue = "",
+    PlaceholderText = "Workspace.AllIceCreams",
+    RemoveTextAfterFocusLost = false,
+    Flag = "FolderPath",
+
+    Callback = function(Text)
+        local folder = getPath(Text)
+
+        if folder then
+            print("Selected folder:", folder:GetFullName())
+        else
+            warn("Invalid path:", Text)
+        end
+    end,
+})
+    end,
+})
