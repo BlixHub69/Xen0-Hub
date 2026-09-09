@@ -23,67 +23,26 @@ tab:CreateButton({
 })
 
 tab:CreateInput({
-    Name = "Execute",
-    CurrentValue = "",
-    PlaceholderText = "Enter Script",
-    RemoveTextAfterFocusLost = false,
-    Callback = function(Text)
-        local func, err = loadstring(Text)
-
-        if not func then
-            warn("Script error: " .. tostring(err))
-            return
-        end
-
-        local success, result = pcall(func)
-
-        if not success then
-            warn("Execution error: " .. tostring(result))
-        end
-    end,
-})
-
-tab:CreateInput({
-    name = "Max players",
-    numeric = true,
-    value = "16",
-    placeholder = "Enter a number",
+    name = "Folder Path",
+    value = "Workspace.AllIceCreams",
+    placeholder = "Enter folder path",
     callback = function(text)
+        local current = game
 
+        for part in text:gmatch("[^%.]+") do
+            if part == "Workspace" then
+                current = workspace
+            else
+                current = current:FindFirstChild(part)
+            end
+
+            if not current then
+                warn("Invalid path: " .. text)
+                return
+            end
+        end
+
+        print("Selected folder:", current:GetFullName())
     end,
 })
 
-        local function getPath(path)
-    local current = game
-
-    for part in path:gmatch("[^%.]+") do
-        if part == "Workspace" then
-            current = workspace
-        else
-            current = current and current:FindFirstChild(part)
-        end
-
-        if not current then
-            return nil
-        end
-    end
-
-    return current
-end
-
-local Input = Tab:CreateInput({
-    Name = "Folder Path",
-    CurrentValue = "",
-    PlaceholderText = "Workspace.AllIceCreams",
-    RemoveTextAfterFocusLost = false,
-    Flag = "FolderPath",
-
-    Callback = function(Text)
-        local folder = getPath(Text)
-
-        if folder then
-            print("Selected folder:", folder:GetFullName())
-        else
-            warn("Invalid path:", Text)
-        end
-end
