@@ -22,27 +22,45 @@ tab:CreateButton({
     end,
 })
 
-tab:CreateInput({
-    name = "Folder Path",
-    value = "Workspace.AllIceCreams",
-    placeholder = "Enter folder path",
-    callback = function(text)
-        local current = game
+Tab:CreateInput({
+   name = "Target Folder Name",
+   placeholderText = "Type folder name and press Enter...",
+   removeTextOnFocusLost = false,
+   callback = function(Text)
+       -- Ignore empty inputs
+       if not Text or Text == "" then return end
 
-        for part in text:gmatch("[^%.]+") do
-            if part == "Workspace" then
-                current = workspace
-            else
-                current = current:FindFirstChild(part)
-            end
+       local player = game:GetService("Players").LocalPlayer
+       local character = player.Character or player.CharacterAdded:Wait()
+       local head = character:FindFirstChild("Head") or character:WaitForChild("Head")
+       
+       -- Search workspace for the folder typed in the input box
+       local iceCreams = workspace:FindFirstChild(Text)
 
-            if not current then
-                warn("Invalid path: " .. text)
-                return
-            end
-        end
+       if not iceCreams then
+           Rayfield:Notify({
+               Title = "Folder Not Found",
+               Content = "Could not find folder '" .. Text .. "' in Workspace.",
+               Duration = 4,
+               Image = 4483363465,
+           })
+           return
+       end
 
-        print("Selected folder:", current:GetFullName())
-    end,
+       -- Iterate through parts and trigger touch interest
+       for _, v in ipairs(iceCreams:GetChildren()) do
+           if v:IsA("BasePart") then
+               firetouchinterest(head, v, 0)
+               task.wait()
+               firetouchinterest(head, v, 1)
+           end
+       end
+
+       Rayfield:Notify({
+           Title = "Success",
+           Content = "Finished collecting items in " .. Text,
+           Duration = 3,
+           Image = 4483363465,
+       })
+   end,
 })
-
