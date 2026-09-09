@@ -49,6 +49,10 @@ tab:CreateInput({
     value = "16",
     placeholder = "Enter a number",
     callback = function(text)
+
+    end,
+})
+
         local function getPath(path)
     local current = game
 
@@ -82,7 +86,4 @@ local Input = Tab:CreateInput({
         else
             warn("Invalid path:", Text)
         end
-    end,
-})
-    end,
-})
+end
