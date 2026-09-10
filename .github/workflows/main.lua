@@ -24,10 +24,10 @@ tab:CreateButton({
 
 Tab:CreateInput({
     name = "Target Folder Name",
+    value = "",
     placeholder = "Type folder name and press Enter...",
-    removeTextOnFocusLost = false,
+    numeric = false,
     callback = function(text)
-        -- Ignore empty inputs
         if not text or text == "" then
             return
         end
@@ -37,10 +37,9 @@ Tab:CreateInput({
         local character = player.Character or player.CharacterAdded:Wait()
         local head = character:FindFirstChild("Head") or character:WaitForChild("Head")
 
-        -- Search Workspace for the folder entered
-        local iceCreams = workspace:FindFirstChild(text)
+        local folder = workspace:FindFirstChild(text)
 
-        if not iceCreams then
+        if not folder then
             Rayfield:Notify({
                 Title = "Folder Not Found",
                 Content = "Could not find folder '" .. text .. "' in Workspace.",
@@ -50,8 +49,7 @@ Tab:CreateInput({
             return
         end
 
-        -- Iterate through parts
-        for _, v in ipairs(iceCreams:GetChildren()) do
+        for _, v in ipairs(folder:GetChildren()) do
             if v:IsA("BasePart") then
                 firetouchinterest(head, v, 0)
                 task.wait()
@@ -67,3 +65,4 @@ Tab:CreateInput({
         })
     end,
 })
+
