@@ -15,27 +15,25 @@ tab:CreateButton({
     end,
 })
 
-tab:CreateButton({
-    name = "Simple Spy",
-    callback = function(value)
-    loadstring(game:HttpGet("https://github.com/exxtremestuffs/SimpleSpySource/raw/master/SimpleSpy.lua"))()
-    end,
-})
-
-Tab:CreateInput({
+tab:CreateInput({
     name = "Target Folder Name",
     value = "",
     placeholder = "Type folder name and press Enter...",
-    numeric = false,
     callback = function(text)
-        if not text or text == "" then
+        print("Committed:", text)
+
+        if text == "" then
             return
         end
 
         local Players = game:GetService("Players")
         local player = Players.LocalPlayer
         local character = player.Character or player.CharacterAdded:Wait()
-        local head = character:FindFirstChild("Head") or character:WaitForChild("Head")
+        local head = character:FindFirstChild("Head")
+
+        if not head then
+            return
+        end
 
         local folder = workspace:FindFirstChild(text)
 
@@ -49,11 +47,11 @@ Tab:CreateInput({
             return
         end
 
-        for _, v in ipairs(folder:GetChildren()) do
-            if v:IsA("BasePart") then
-                firetouchinterest(head, v, 0)
+        for _, object in ipairs(folder:GetChildren()) do
+            if object:IsA("BasePart") then
+                firetouchinterest(head, object, 0)
                 task.wait()
-                firetouchinterest(head, v, 1)
+                firetouchinterest(head, object, 1)
             end
         end
 
@@ -65,4 +63,3 @@ Tab:CreateInput({
         })
     end,
 })
-
