@@ -23,44 +23,47 @@ tab:CreateButton({
 })
 
 Tab:CreateInput({
-   name = "Target Folder Name",
-   placeholderText = "Type folder name and press Enter...",
-   removeTextOnFocusLost = false,
-   callback = function(Text)
-       -- Ignore empty inputs
-       if not Text or Text == "" then return end
+    name = "Target Folder Name",
+    placeholder = "Type folder name and press Enter...",
+    removeTextOnFocusLost = false,
+    callback = function(text)
+        -- Ignore empty inputs
+        if not text or text == "" then
+            return
+        end
 
-       local player = game:GetService("Players").LocalPlayer
-       local character = player.Character or player.CharacterAdded:Wait()
-       local head = character:FindFirstChild("Head") or character:WaitForChild("Head")
-       
-       -- Search workspace for the folder typed in the input box
-       local iceCreams = workspace:FindFirstChild(Text)
+        local Players = game:GetService("Players")
+        local player = Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local head = character:FindFirstChild("Head") or character:WaitForChild("Head")
 
-       if not iceCreams then
-           Rayfield:Notify({
-               Title = "Folder Not Found",
-               Content = "Could not find folder '" .. Text .. "' in Workspace.",
-               Duration = 4,
-               Image = 4483363465,
-           })
-           return
-       end
+        -- Search Workspace for the folder entered
+        local iceCreams = workspace:FindFirstChild(text)
 
-       -- Iterate through parts and trigger touch interest
-       for _, v in ipairs(iceCreams:GetChildren()) do
-           if v:IsA("BasePart") then
-               firetouchinterest(head, v, 0)
-               task.wait()
-               firetouchinterest(head, v, 1)
-           end
-       end
+        if not iceCreams then
+            Rayfield:Notify({
+                Title = "Folder Not Found",
+                Content = "Could not find folder '" .. text .. "' in Workspace.",
+                Duration = 4,
+                Image = 4483363465,
+            })
+            return
+        end
 
-       Rayfield:Notify({
-           Title = "Success",
-           Content = "Finished collecting items in " .. Text,
-           Duration = 3,
-           Image = 4483363465,
-       })
-   end,
+        -- Iterate through parts
+        for _, v in ipairs(iceCreams:GetChildren()) do
+            if v:IsA("BasePart") then
+                firetouchinterest(head, v, 0)
+                task.wait()
+                firetouchinterest(head, v, 1)
+            end
+        end
+
+        Rayfield:Notify({
+            Title = "Success",
+            Content = "Finished collecting items in " .. text,
+            Duration = 3,
+            Image = 4483363465,
+        })
+    end,
 })
